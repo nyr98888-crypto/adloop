@@ -1,0 +1,40 @@
+{
+  "app": {
+    "name": "One Loop Social",
+    "tagline": "פוסט מוכן ב־2–3 דקות"
+  },
+  "nav": {
+    "capture": "יצירה",
+    "studio": "פוסטים",
+    "publish": "פרסום",
+    "home": "בית",
+    "dashboard": "סטודיו פוסטים",
+    "calendar": "יומן ולוח זמנים",
+    "reviews": "ביקורות ומוניטין",
+    "analytics": "מדדים",
+    "settings": "הגדרות"
+  },
+  "post": {
+    "label": "פוסט",
+    "publication": "פרסום",
+    "publishAll": "פרסם להכל",
+    "copyAndOpen": "העתק ופתח אפליקציה",
+    "fillSlot": "מלא חלון זה בפוסט"
+  },
+  "reviews": {
+    "warm": "תגובה חמה ומודה",
+    "professional": "תגובה עניינית ומקצועית",
+    "deescalating": "תגובה מרגיעה ומגשרת"
+  },
+  "analytics": {
+    "topPost": "הפוסט המוביל של השבוע",
+    "reactions": "התפלגות תגובות לפי רשת",
+    "whatsappClicks": "לחיצות וואטסאפ",
+    "ratingIndex": "ציון מוניטין משוקלל"
+  },
+  "capture": {
+    "voice": "הכתבה קולית",
+    "photo": "צילום / העלאה",
+    "generate": "צור פוסט"
+  }
+}

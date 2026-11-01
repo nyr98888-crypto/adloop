@@ -1,9 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Dynamic shells use cookies() for locale — keep classic SSR rendering
   turbopack: {
     rules: {
       "*.css": {

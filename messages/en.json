@@ -1,0 +1,40 @@
+{
+  "app": {
+    "name": "One Loop Social",
+    "tagline": "Ready post in 2–3 minutes"
+  },
+  "nav": {
+    "capture": "Capture",
+    "studio": "Studio",
+    "publish": "Publish",
+    "home": "Home",
+    "dashboard": "Post Studio",
+    "calendar": "Calendar",
+    "reviews": "Reviews",
+    "analytics": "Analytics",
+    "settings": "Settings"
+  },
+  "post": {
+    "label": "Post",
+    "publication": "Publication",
+    "publishAll": "Publish to all channels",
+    "copyAndOpen": "Copy & Open",
+    "fillSlot": "Fill this slot with a post"
+  },
+  "reviews": {
+    "warm": "Warm & Grateful",
+    "professional": "Professional & Concise",
+    "deescalating": "De-escalating & Compromising"
+  },
+  "analytics": {
+    "topPost": "Top Post of the Week",
+    "reactions": "Per-Network Reactions",
+    "whatsappClicks": "WhatsApp Direct Link Clicks",
+    "ratingIndex": "Unified Rating Index"
+  },
+  "capture": {
+    "voice": "Voice dictation",
+    "photo": "Camera / upload",
+    "generate": "Generate post"
+  }
+}

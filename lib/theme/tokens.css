@@ -1,0 +1,17 @@
+:root {
+  /* Vibrant sky-blue palette from One Loop Social cloud emblem */
+  --brand-primary: #0077f6;
+  --brand-vivid: #0284fe;
+  --brand-deep: #005ac2;
+  --brand-deeper: #0048a0;
+  --brand-accent: #0052cc;
+  --brand-light: #4dacff;
+  --brand-soft: #bae6fd;
+  --brand-canvas: #f8fafc;
+  --brand-surface: #ffffff;
+  --brand-ok: #10b981;
+  --brand-warn: #f59e0b;
+  --brand-foreground: #0f172a;
+  --brand-muted: #64748b;
+  --brand-on-blue: #ffffff;
+}
