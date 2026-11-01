@@ -1,8 +1,6 @@
-/** Root redirects via middleware to /m or /d */
+import { redirect } from "next/navigation";
+
+/** Desktop is the default shell; mobile/desktop UI is handled via Tailwind in-layout. */
 export default function RootPage() {
-  return (
-    <main className="flex flex-1 items-center justify-center p-8">
-      <p className="text-brand-primary">One Loop Social…</p>
-    </main>
-  );
+  redirect("/d");
 }
