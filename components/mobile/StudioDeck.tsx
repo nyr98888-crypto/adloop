@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import type { PostPayload } from "@/lib/domain/types";
 import { PLATFORM_LABELS } from "@/lib/domain/types";
 
-export function StudioDeck({ locale }: { locale: "he" | "en" }) {
-  const [post, setPost] = useState<PostPayload | null>(null);
-
-  useEffect(() => {
+function readSessionPost(): PostPayload | null {
+  if (typeof window === "undefined") return null;
+  try {
     const raw = sessionStorage.getItem("ols_post");
-    if (raw) setPost(JSON.parse(raw) as PostPayload);
-  }, []);
+    return raw ? (JSON.parse(raw) as PostPayload) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function StudioDeck({ locale }: { locale: "he" | "en" }) {
+  const [post] = useState<PostPayload | null>(() => readSessionPost());
 
   if (!post) {
     return (

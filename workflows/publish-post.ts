@@ -81,8 +81,9 @@ export async function publishPostWorkflow(input: {
 
 async function officialPublish(
   account: ConnectedAccount,
-  _caption: string,
+  caption: string,
 ): Promise<string> {
+  void caption;
   // Production: Meta Graph / LinkedIn / etc. using encrypted tokenRef
   if (!account.tokenRef && !process.env.META_ACCESS_TOKEN) {
     // Demo: simulate success for accounts marked official with scopes

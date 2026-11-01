@@ -135,20 +135,17 @@ export function PostStudio({
     return promptRef.current;
   }
 
-  useEffect(() => {
-    if (slotPrompt) setPrompt(slotPrompt);
-  }, [slotPrompt]);
-
-  useEffect(() => {
-    if (!enabled.find((a) => a.id === activeId)) {
-      setActiveId(enabled[0]?.id ?? "");
-    }
-  }, [enabled, activeId]);
+  const resolvedActiveId = enabled.some((a) => a.id === activeId)
+    ? activeId
+    : (enabled[0]?.id ?? "");
+  if (resolvedActiveId !== activeId) {
+    setActiveId(resolvedActiveId);
+  }
 
   const activeVariant = post?.variants.find(
-    (v) => v.connectedAccountId === activeId,
+    (v) => v.connectedAccountId === resolvedActiveId,
   );
-  const activeAccount = enabled.find((a) => a.id === activeId);
+  const activeAccount = enabled.find((a) => a.id === resolvedActiveId);
 
   const visibleVariants = useMemo(() => {
     if (!post) return [];
@@ -393,11 +390,11 @@ export function PostStudio({
   }
 
   async function updateCaption(caption: string) {
-    if (!post || !activeId) return;
+    if (!post || !resolvedActiveId) return;
     const optimistic: PostPayload = {
       ...post,
       variants: post.variants.map((v) =>
-        v.connectedAccountId === activeId
+        v.connectedAccountId === resolvedActiveId
           ? { ...v, caption, dirty: true }
           : v,
       ),
@@ -407,18 +404,21 @@ export function PostStudio({
       await fetch(`/api/posts/${post.id}/variant`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ connectedAccountId: activeId, caption }),
+        body: JSON.stringify({
+          connectedAccountId: resolvedActiveId,
+          caption,
+        }),
       });
     }
   }
 
   async function replaceMediaForTab() {
-    if (!post || !activeId) return;
+    if (!post || !resolvedActiveId) return;
     const mediaAssetIds = [`tab-media-${Date.now()}`];
     setPost({
       ...post,
       variants: post.variants.map((v) =>
-        v.connectedAccountId === activeId
+        v.connectedAccountId === resolvedActiveId
           ? { ...v, mediaAssetIds, dirty: true }
           : v,
       ),
@@ -695,7 +695,7 @@ export function PostStudio({
 
         <div className="flex flex-wrap gap-2 border-b border-[#BAE6FD]/60 pb-3">
           {enabled.map((a) => {
-            const active = activeId === a.id;
+            const active = resolvedActiveId === a.id;
             return (
               <button
                 key={a.id}

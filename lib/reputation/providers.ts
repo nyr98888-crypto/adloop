@@ -8,7 +8,8 @@ export interface ReputationProvider {
 /** Google Business Profile API */
 export class GoogleReputationProvider implements ReputationProvider {
   id = "google" as const;
-  async fetchReviews(_locationId: string): Promise<ReviewFeedItem[]> {
+  async fetchReviews(locationId: string): Promise<ReviewFeedItem[]> {
+    void locationId;
     // Production: GBP API
     return [];
   }
@@ -20,7 +21,8 @@ export class GoogleReputationProvider implements ReputationProvider {
  */
 export class EasyReputationProvider implements ReputationProvider {
   id = "easy" as const;
-  async fetchReviews(_url: string): Promise<ReviewFeedItem[]> {
+  async fetchReviews(url: string): Promise<ReviewFeedItem[]> {
+    void url;
     return [];
   }
 

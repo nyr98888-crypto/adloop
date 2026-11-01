@@ -24,16 +24,13 @@ export function DesktopShell({
   businessName: string;
   children: React.ReactNode;
 }) {
-  const [locale, setLocale] = useState<Locale>(serverLocale);
-
-  useEffect(() => {
-    setLocale(serverLocale);
-  }, [serverLocale]);
+  const [override, setOverride] = useState<Locale | null>(null);
+  const locale = override ?? serverLocale;
 
   useEffect(() => {
     const onLocale = (e: Event) => {
       const next = (e as CustomEvent<{ locale: Locale }>).detail?.locale;
-      if (next === "he" || next === "en") setLocale(next);
+      if (next === "he" || next === "en") setOverride(next);
     };
     window.addEventListener("ols:locale", onLocale);
     return () => window.removeEventListener("ols:locale", onLocale);

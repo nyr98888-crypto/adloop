@@ -87,9 +87,11 @@ export function MobileActionCanvas({
       /* ignore */
     }
     if (acc?.deepLinkTemplate) {
-      window.location.href = acc.deepLinkTemplate.replace(
-        "{text}",
-        encodeURIComponent(caption),
+      window.location.assign(
+        acc.deepLinkTemplate.replace(
+          "{text}",
+          encodeURIComponent(caption),
+        ),
       );
     } else if (acc?.webComposerUrl) {
       window.open(acc.webComposerUrl, "_blank");

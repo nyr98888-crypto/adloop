@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import type { BusinessProfile, Locale } from "@/lib/domain/types";
 import { fieldDirProps } from "@/lib/ui/field";
+import { useIsClient } from "@/hooks/useIsClient";
 
 export type BusinessFormValues = {
   name: string;
@@ -86,12 +87,8 @@ export function BusinessModal({
   const [values, setValues] = useState<BusinessFormValues>(
     () => initial ?? emptyFormValues(),
   );
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const inputProps = fieldDirProps(locale);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   function set<K extends keyof BusinessFormValues>(
     key: K,

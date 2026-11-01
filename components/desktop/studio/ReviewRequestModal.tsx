@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Locale } from "@/lib/domain/types";
 import { useBusiness } from "@/context/BusinessContext";
 import { fieldDirProps } from "@/lib/ui/field";
+import { useIsClient } from "@/hooks/useIsClient";
 import {
   buildDemoAppointments,
   cleanDisplayUrl,
@@ -24,6 +25,7 @@ export function ReviewRequestModal({
   onClose: () => void;
 }) {
   const { profile } = useBusiness();
+  const mounted = useIsClient();
   const links = useMemo(() => {
     const raw = defaultReviewLinks(profile.name);
     return {
@@ -52,13 +54,13 @@ export function ReviewRequestModal({
   }, [locale, profile.name, clientName, links.google, links.easy, jobHint]);
 
   const [text, setText] = useState(composed);
+  const [baseline, setBaseline] = useState(composed);
   const [copied, setCopied] = useState(false);
 
-  // Live-sync body when name / links / job hint change (unless user heavily edited —
-  // we always refresh on name for the requested UX)
-  useEffect(() => {
+  if (composed !== baseline) {
+    setBaseline(composed);
     setText(composed);
-  }, [composed]);
+  }
 
   async function copy() {
     try {
@@ -69,6 +71,8 @@ export function ReviewRequestModal({
       /* ignore */
     }
   }
+
+  if (!mounted) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">

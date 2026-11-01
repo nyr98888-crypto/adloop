@@ -8,7 +8,8 @@ export interface CalendarAdapter {
 /** Google Calendar API adapter (requires OAuth tokens in production) */
 export class GoogleCalendarAdapter implements CalendarAdapter {
   id = "google" as const;
-  async sync(_accountRef: string): Promise<DiaryEvent[]> {
+  async sync(accountRef: string): Promise<DiaryEvent[]> {
+    void accountRef;
     // Production: incremental syncToken via Google Calendar API
     return [];
   }

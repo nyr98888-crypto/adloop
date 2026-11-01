@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { PostPayload } from "@/lib/domain/types";
 import { PLATFORM_LABELS } from "@/lib/domain/types";
 
@@ -17,6 +17,16 @@ type Result = {
   remotePostId?: string;
 };
 
+function readSessionPost(): PostPayload | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem("ols_post");
+    return raw ? (JSON.parse(raw) as PostPayload) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function PublishActions({
   locale,
   labels,
@@ -24,14 +34,9 @@ export function PublishActions({
   locale: "he" | "en";
   labels: { publishAll: string; copyAndOpen: string };
 }) {
-  const [post, setPost] = useState<PostPayload | null>(null);
+  const [post, setPost] = useState<PostPayload | null>(() => readSessionPost());
   const [results, setResults] = useState<Result[]>([]);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    const raw = sessionStorage.getItem("ols_post");
-    if (raw) setPost(JSON.parse(raw) as PostPayload);
-  }, []);
 
   async function publishAll() {
     if (!post) return;
@@ -61,7 +66,7 @@ export function PublishActions({
       /* ignore */
     }
     if (manual.deepLink) {
-      window.location.href = manual.deepLink;
+      window.location.assign(manual.deepLink);
       return;
     }
     if (manual.webComposerUrl) {

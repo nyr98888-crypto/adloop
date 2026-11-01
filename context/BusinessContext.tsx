@@ -91,64 +91,71 @@ export function BusinessProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    try {
-      let nextBusinesses = defaults;
-      let nextActive = defaults[0].id;
-      let nextChannels: ChannelsMap = {};
+    let cancelled = false;
+    // Defer so hydration setState is not synchronous inside the effect body.
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        let nextBusinesses = defaults;
+        let nextActive = defaults[0].id;
+        let nextChannels: ChannelsMap = {};
 
-      const rawBiz = localStorage.getItem(BUSINESS_STORAGE_KEY);
-      if (rawBiz) {
-        const parsed = JSON.parse(rawBiz) as BusinessProfile[];
-        if (Array.isArray(parsed) && parsed.length) nextBusinesses = parsed;
-      } else {
-        const legacy = localStorage.getItem(LEGACY_BUSINESS_KEY);
-        if (legacy) {
-          const parsed = JSON.parse(legacy) as BusinessProfile;
-          nextBusinesses = [{ ...defaults[0], ...parsed }];
-        }
-      }
-
-      const rawActive = localStorage.getItem(ACTIVE_BUSINESS_KEY);
-      if (rawActive && nextBusinesses.some((b) => b.id === rawActive)) {
-        nextActive = rawActive;
-      } else {
-        nextActive = nextBusinesses[0]?.id ?? defaults[0].id;
-      }
-
-      const rawCh = localStorage.getItem(CHANNEL_STORAGE_KEY);
-      if (rawCh) {
-        const parsed = JSON.parse(rawCh) as ChannelsMap;
-        if (parsed && typeof parsed === "object") nextChannels = parsed;
-      } else {
-        const legacyCh = localStorage.getItem(LEGACY_CHANNEL_KEY);
-        if (legacyCh) {
-          const parsed = JSON.parse(legacyCh) as ConnectedAccount[];
-          if (Array.isArray(parsed) && parsed.length) {
-            nextChannels[nextActive] = parsed.map((a) => ({
-              ...a,
-              businessId: nextActive,
-            }));
+        const rawBiz = localStorage.getItem(BUSINESS_STORAGE_KEY);
+        if (rawBiz) {
+          const parsed = JSON.parse(rawBiz) as BusinessProfile[];
+          if (Array.isArray(parsed) && parsed.length) nextBusinesses = parsed;
+        } else {
+          const legacy = localStorage.getItem(LEGACY_BUSINESS_KEY);
+          if (legacy) {
+            const parsed = JSON.parse(legacy) as BusinessProfile;
+            nextBusinesses = [{ ...defaults[0], ...parsed }];
           }
         }
-      }
 
-      for (const b of nextBusinesses) {
-        nextChannels = ensureChannels(nextChannels, b);
-      }
+        const rawActive = localStorage.getItem(ACTIVE_BUSINESS_KEY);
+        if (rawActive && nextBusinesses.some((b) => b.id === rawActive)) {
+          nextActive = rawActive;
+        } else {
+          nextActive = nextBusinesses[0]?.id ?? defaults[0].id;
+        }
 
-      // Always expand to full 11-network catalog per business
-      let mergedChannels = nextChannels;
-      for (const b of nextBusinesses) {
-        mergedChannels = ensureChannels(mergedChannels, b);
-      }
+        const rawCh = localStorage.getItem(CHANNEL_STORAGE_KEY);
+        if (rawCh) {
+          const parsed = JSON.parse(rawCh) as ChannelsMap;
+          if (parsed && typeof parsed === "object") nextChannels = parsed;
+        } else {
+          const legacyCh = localStorage.getItem(LEGACY_CHANNEL_KEY);
+          if (legacyCh) {
+            const parsed = JSON.parse(legacyCh) as ConnectedAccount[];
+            if (Array.isArray(parsed) && parsed.length) {
+              nextChannels[nextActive] = parsed.map((a) => ({
+                ...a,
+                businessId: nextActive,
+              }));
+            }
+          }
+        }
 
-      setBusinesses(nextBusinesses);
-      setActiveBusinessId(nextActive);
-      setChannelsByBusiness(mergedChannels);
-    } catch {
-      /* ignore corrupt storage */
-    }
-    setHydrated(true);
+        for (const b of nextBusinesses) {
+          nextChannels = ensureChannels(nextChannels, b);
+        }
+
+        let mergedChannels = nextChannels;
+        for (const b of nextBusinesses) {
+          mergedChannels = ensureChannels(mergedChannels, b);
+        }
+
+        setBusinesses(nextBusinesses);
+        setActiveBusinessId(nextActive);
+        setChannelsByBusiness(mergedChannels);
+      } catch {
+        /* ignore corrupt storage */
+      }
+      setHydrated(true);
+    });
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

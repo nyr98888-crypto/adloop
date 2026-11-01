@@ -16,6 +16,7 @@ import {
   wazeLink,
 } from "@/lib/ops/appointments";
 import { useBusiness } from "@/context/BusinessContext";
+import { useIsClient } from "@/hooks/useIsClient";
 
 export function AppointmentDrawer({
   locale,
@@ -27,17 +28,20 @@ export function AppointmentDrawer({
   onClose: () => void;
 }) {
   const { profile } = useBusiness();
-  const [mounted, setMounted] = useState(false);
-  const [note, setNote] = useState("");
+  const mounted = useIsClient();
+  const clientId = appointment.client.id;
+  const [noteClientId, setNoteClientId] = useState(clientId);
+  const [note, setNote] = useState(
+    () => loadClientNotes()[clientId] ?? "",
+  );
   const [savedFlash, setSavedFlash] = useState(false);
   const field = fieldDirProps(locale);
   const links = defaultReviewLinks(profile.name);
 
-  useEffect(() => {
-    setMounted(true);
-    const all = loadClientNotes();
-    setNote(all[appointment.client.id] ?? "");
-  }, [appointment.client.id]);
+  if (clientId !== noteClientId) {
+    setNoteClientId(clientId);
+    setNote(loadClientNotes()[clientId] ?? "");
+  }
 
   useEffect(() => {
     const t = setTimeout(() => {
